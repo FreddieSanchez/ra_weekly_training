@@ -25,19 +25,20 @@ def get_training_week():
     r = requests.get("http://www.runningahead.com/" + link)
     bs = BeautifulSoup(r.text)
     h = [re.findall(r'<th>Notes:</th><td>(.+)</td>',str(x)) for x in bs.findAll(lambda tag: tag.name == 'tr')]
- 
+    notes = ""
     h = filter(None,h)
     if len(h) != 0:
-      notes = [item for sub in h for item in sub][0] #flatten list
-    else: 
-      notes = ""
+      h = str(h[0][0]).replace("\r","")
+      notes = h
+#notes = [item for sub in h for item in sub][0] #flatten list
     col = [item for sub in col for item in sub] #flatten list
     if len(col) == 0:
       continue
+
     col[len(col)-1] = notes
     col.pop(2)
     cols.insert(0,col)
-    
+
   print "|"+"|".join(headers)+ "|"
   line = ""
   for h in headers:
@@ -45,8 +46,8 @@ def get_training_week():
   line += "|"
   print line
 
-  for col in cols:
-    print "|"+"|".join(col)+ "|"
+  for c in cols:
+    print "|"+"|".join(c)+ "|"
 
 
 if __name__ == "__main__":
